@@ -54,5 +54,11 @@ public class MazeTest {
 			}
 		}
 	}
+	
+	@Test
+	public void testGenerateMST() {
+		maze.generateMST();
+		assertEquals(Maze.ROWS * Maze.COLUMNS - 1, maze.edges.size());
+	}
 
 }

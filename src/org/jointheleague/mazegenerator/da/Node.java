@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Node {
 	
-	boolean connected;
+	private boolean connected;
 	private ArrayList<Edge> edges;
 	
 	public Node() {
@@ -18,5 +18,12 @@ public class Node {
 	public ArrayList<Edge> getAdjacentEdges() {
 		return edges;
 	}
-
+	
+	public void setConnected(boolean b) {
+		connected = b;
+	}
+	
+	public boolean isConnected() {
+		return connected;
+	}
 }

@@ -1,5 +1,6 @@
 package org.jointheleague.mazegenerator.da;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 public class Maze {
@@ -44,6 +45,34 @@ public class Maze {
 				nodes[i][j].addEdge(e);
 				nodes[i + 1][j].addEdge(e);
 			}
+		}
+	}
+	
+	public void generateMST() {
+		PriorityQueue<Edge> queue = new PriorityQueue<Edge>();
+		for (Edge e : nodes[0][0].getAdjacentEdges()) {
+			queue.add(e);
+		}
+		int i = 0;
+		while (!queue.isEmpty()) {
+			Edge currentEdge = queue.remove();
+			if (currentEdge.getNode1().isConnected() && currentEdge.getNode2().isConnected()) {
+				continue;
+			}
+			edges.add(currentEdge);
+			edges.get(i).getNode1().setConnected(true);
+			edges.get(i).getNode2().setConnected(true);
+			for (Edge e : edges.get(i).getNode1().getAdjacentEdges()) {
+				if (!(edges.contains(e) || queue.contains(e))) {
+					queue.add(e);
+				}
+			}
+			for (Edge e : edges.get(i).getNode2().getAdjacentEdges()) {
+				if (!(edges.contains(e) || queue.contains(e))) {
+					queue.add(e);
+				}
+			}
+			i++;
 		}
 	}
 	
