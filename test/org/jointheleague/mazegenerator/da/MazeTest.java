@@ -22,7 +22,7 @@ public class MazeTest {
 
 	@Test
 	public void testInitializeHorizontal() {
-		assertTrue(Maze.ROWS > 0);
+		assertTrue("Number of rows should be greater than 0", Maze.ROWS > 0);
 		assertTrue(Maze.COLUMNS > 0);
 		assertEquals(Maze.ROWS, maze.getHorizontalEdges().length);
 		for (Edge[] row: maze.getHorizontalEdges()) {

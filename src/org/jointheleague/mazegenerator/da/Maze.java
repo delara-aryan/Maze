@@ -1,9 +1,14 @@
 package org.jointheleague.mazegenerator.da;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-public class Maze {
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+public class Maze extends JPanel implements Runnable{
 	
 	static final int ROWS = 4;
 	static final int COLUMNS = 6;
@@ -12,6 +17,22 @@ public class Maze {
 	private Node[][] nodes;
 	private Edge[][] horizontalEdges;
 	private Edge[][] verticalEdges;
+	
+	public static void main(String[] args) {
+		Maze m = new Maze();
+		SwingUtilities.invokeLater(m);
+	}
+	
+	private void setUpGUI() {
+		JFrame frame = new JFrame();
+		frame.add(this);
+		int cellSize = 100;
+		Dimension d = new Dimension(cellSize*COLUMNS, cellSize*ROWS);
+		this.setPreferredSize(d);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
 	
 	public void initialize() {
 		// Initialize nodes and edges
@@ -53,26 +74,22 @@ public class Maze {
 		for (Edge e : nodes[0][0].getAdjacentEdges()) {
 			queue.add(e);
 		}
-		int i = 0;
+		nodes[0][0].setConnected(true);
 		while (!queue.isEmpty()) {
 			Edge currentEdge = queue.remove();
 			if (currentEdge.getNode1().isConnected() && currentEdge.getNode2().isConnected()) {
 				continue;
 			}
+			final Node currentNode = currentEdge.getNode1().isConnected()
+									? currentEdge.getNode2()
+									: currentEdge.getNode1();
+			currentNode.setConnected(true);
 			edges.add(currentEdge);
-			edges.get(i).getNode1().setConnected(true);
-			edges.get(i).getNode2().setConnected(true);
-			for (Edge e : edges.get(i).getNode1().getAdjacentEdges()) {
-				if (!(edges.contains(e) || queue.contains(e))) {
+			for (Edge e : currentNode.getAdjacentEdges()) {
+				if (!(e.getNode1().isConnected() && e.getNode2().isConnected())) {
 					queue.add(e);
 				}
 			}
-			for (Edge e : edges.get(i).getNode2().getAdjacentEdges()) {
-				if (!(edges.contains(e) || queue.contains(e))) {
-					queue.add(e);
-				}
-			}
-			i++;
 		}
 	}
 	
@@ -86,5 +103,10 @@ public class Maze {
 
 	public Node[][] getNodes() {
 		return nodes;
+	}
+
+	@Override
+	public void run() {
+		setUpGUI();
 	}
 }
