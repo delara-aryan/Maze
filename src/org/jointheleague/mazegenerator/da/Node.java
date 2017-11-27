@@ -6,8 +6,12 @@ public class Node {
 	
 	private boolean connected;
 	private ArrayList<Edge> edges;
+	private final int row;
+	private final int column;
 	
-	public Node() {
+	public Node(int row, int column) {
+		this.row = row;
+		this.column = column;
 		edges = new ArrayList<Edge>();
 	}
 	
@@ -15,6 +19,14 @@ public class Node {
 		edges.add(e);
 	}
 	
+	public int getRow() {
+		return row;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+
 	public ArrayList<Edge> getAdjacentEdges() {
 		return edges;
 	}

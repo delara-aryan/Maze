@@ -1,49 +1,33 @@
 package org.jointheleague.mazegenerator.da;
-import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
-public class Maze extends JPanel implements Runnable{
+public class Maze{
 	
-	static final int ROWS = 4;
-	static final int COLUMNS = 6;
-	
-	ArrayList<Edge> edges = new ArrayList<Edge>();
+	private final int rows;
+	private final int columns;	
 	private Node[][] nodes;
 	private Edge[][] horizontalEdges;
 	private Edge[][] verticalEdges;
 	
-	public static void main(String[] args) {
-		Maze m = new Maze();
-		SwingUtilities.invokeLater(m);
+	public Maze(int rows, int columns) {
+		this.rows = rows;
+		this.columns = columns;
+		initialize();
 	}
-	
-	private void setUpGUI() {
-		JFrame frame = new JFrame();
-		frame.add(this);
-		int cellSize = 100;
-		Dimension d = new Dimension(cellSize*COLUMNS, cellSize*ROWS);
-		this.setPreferredSize(d);
-		frame.pack();
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-	
+
 	public void initialize() {
 		// Initialize nodes and edges
-		nodes = new Node[ROWS][COLUMNS];
-		horizontalEdges = new Edge[ROWS][COLUMNS - 1];
-		verticalEdges = new Edge[ROWS - 1][COLUMNS];
+		nodes = new Node[rows][columns];
+		horizontalEdges = new Edge[rows][columns - 1];
+		verticalEdges = new Edge[rows - 1][columns];
 		
 		// Create nodes
 		for (int i = 0; i < nodes.length; i++) {
 			for (int j = 0; j < nodes[i].length; j++) {
-				nodes[i][j] = new Node();
+				nodes[i][j] = new Node(i, j);
 			}
 		}
 		
@@ -69,7 +53,8 @@ public class Maze extends JPanel implements Runnable{
 		}
 	}
 	
-	public void generateMST() {
+	public List<Edge> generateMST() {
+		List<Edge> edges = new ArrayList<Edge>();
 		PriorityQueue<Edge> queue = new PriorityQueue<Edge>();
 		for (Edge e : nodes[0][0].getAdjacentEdges()) {
 			queue.add(e);
@@ -91,6 +76,7 @@ public class Maze extends JPanel implements Runnable{
 				}
 			}
 		}
+		return edges;
 	}
 	
 	public Edge[][] getHorizontalEdges() {
@@ -104,9 +90,12 @@ public class Maze extends JPanel implements Runnable{
 	public Node[][] getNodes() {
 		return nodes;
 	}
+	
+	public int getRows() {
+		return rows;
+	}
 
-	@Override
-	public void run() {
-		setUpGUI();
+	public int getColumns() {
+		return columns;
 	}
 }
