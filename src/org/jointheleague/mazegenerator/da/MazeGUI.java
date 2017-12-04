@@ -19,12 +19,12 @@ import javax.swing.Timer;
 
 public class MazeGUI extends JPanel implements Runnable, ActionListener {
 
-	private final int ROWS = 100;
+	private final int ROWS = 90;
 	private final int COLUMNS = 100;
 	private final int cellSize = 10;
 	List<Edge> edges;
 	Timer ticker;
-	int numEdges = 1;
+	int numEdges = 0;
 	BufferedImage image;
 	private Graphics2D imageGraphics;
 
@@ -44,11 +44,12 @@ public class MazeGUI extends JPanel implements Runnable, ActionListener {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		edges = new Maze(ROWS, COLUMNS).generateMST();
+		assert edges.size() == ROWS*COLUMNS - 1;
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		imageGraphics = image.createGraphics();
 		imageGraphics.setColor(Color.BLACK);
 		imageGraphics.fillRect(0, 0, getWidth(), getHeight());
-		ticker = new Timer(10, this);
+		ticker = new Timer(1, this);
 		ticker.start();
 	}
 
@@ -78,11 +79,11 @@ public class MazeGUI extends JPanel implements Runnable, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		drawMaze(imageGraphics);
-		repaint();
 		if (numEdges == edges.size()) {
 			ticker.stop();
 		} else {
+			drawMaze(imageGraphics);
+			repaint();
 			numEdges++;
 		}
 	}
